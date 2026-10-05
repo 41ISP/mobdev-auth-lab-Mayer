@@ -3,8 +3,14 @@ import Input from "../components/Input"
 import Button from "../components/Button"
 
 const ItemDetail = () => {
+
+    
+
     const handleBid = () => {}
     
+
+
+
     return (
         <div className="container">
 

@@ -2,11 +2,38 @@ import { useState } from 'react'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import { Link } from 'react-router-dom'
+import { api } from '../api/api'
 
 const Register = () => {
-    const [error, setError] = useState('')
+    const [error, setError] = useState("")
 
-    const handleSubmit = (e) => {}
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError("")
+        
+        if(e.target.password.value !== e.target.password2.value){
+                setError("Пароли не совпадают")
+                return
+        }
+
+
+    
+
+        const user ={
+            username: e.target.username.value,
+            email: e.target.email.value,
+            password: e.target.password.value,
+        }
+    
+            try {
+
+            const data = await api.registerUser(user)
+
+        } catch (error){
+                setError(error.response.data.error)
+                console.error(error)
+        }
+}
 
     return (
         <div className="container">
@@ -29,7 +56,7 @@ const Register = () => {
                             class="form-input"
                             name="username"
                             placeholder="Введите имя пользователя"
-                            minlength="3"
+                            minlength={3}
                             required
                             autocomplete="username"
                         />
@@ -60,7 +87,7 @@ const Register = () => {
                             class="form-input"
                             name="password"
                             placeholder="Введите пароль"
-                            minlength="6"
+                            minlength={6}
                             required
                             autocomplete="new-password"
                         />
