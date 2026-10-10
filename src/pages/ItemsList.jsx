@@ -1,41 +1,50 @@
+import { useEffect } from 'react'
 import ItemCard from '../components/ItemCard'
+import { useItemStore } from '../store/useItemStore'
 
 const ItemsList = () => {
-    const items = []
+   // const items = []
 
-    const { imdbID } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  //   const { imdbID } = useParams();
+  // const [movie, setMovie] = useState(null);
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      setIsLoading(true);
-      setError(null);
+  // useEffect(() => {
+  //   const fetchMovieDetails = async () => {
+  //     setIsLoading(true);
+  //     setError(null);
 
-      try {
-        const apiKey = import.meta.env.VITE_OMDB_API_KEY;
-        const response = await fetch(
-          `https://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}&plot=full`
-        );
-        const data = await response.json();
+  //     try {
+  //       const apiKey = import.meta.env.VITE_OMDB_API_KEY;
+  //       const response = await fetch(
+  //         `https://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}&plot=full`
+  //       );
+  //       const data = await response.json();
 
-        if (data.Response === 'False') {
-          setError(data.Error);
-        } else {
-          setMovie(data);
-        }
-      } catch (err) {
-        setError('Не удалось загрузить данные о фильме');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  //       if (data.Response === 'False') {
+  //         setError(data.Error);
+  //       } else {
+  //         setMovie(data);
+  //       }
+  //     } catch (err) {
+  //       setError('Не удалось загрузить данные о фильме');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    if (imdbID) {
-      fetchMovieDetails();
-    }
-  }, [imdbID]);
+  //   if (imdbID) {
+  //     fetchMovieDetails();
+  //   }
+  // }, [imdbID]);
+
+
+     const {items, getItems} = useItemStore()
+    useEffect(() => 
+        {
+            getItems()
+        }, [])
 
 
     return (
