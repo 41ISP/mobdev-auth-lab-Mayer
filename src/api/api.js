@@ -39,12 +39,52 @@ const loginUser = async (user) => {
     return res
 }
 
+const reportItem = async (id) => {
+    const res = await apiInstance.post(`/items/${id}/report`)
+    return res  
+}
+
+const getStats = async () => {
+    const res = await apiInstance.get("/stats")
+    return res 
+}
+
+const getMyItem = async () => {
+    const res = await apiInstance.get(`/my-items`)
+    return res
+
+}
+
+const deleteItem = async (id) => {
+    const res = await apiInstance.delete(`/items/${id}`)
+    return res
+
+}
+
+const likeItem = async (id) => {
+    const res = await apiInstance.post(`/items/${id}/like`)
+    return res
+
+}
+
+const authMe = async () => {
+    const res = await apiInstance.getUri("/auth/me")
+    return res
+
+}
+
 
 export const api = {
 
     registerUser,
     loginUser,
     sendItem,
-    getItem
+    getItem,
+    reportItem,
+    getStats,
+    getMyItem,
+    deleteItem,
+    likeItem,
+    authMe
 
 }

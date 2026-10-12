@@ -1,8 +1,32 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from './Input'
+import { useItemStore } from '../store/useItemStore'
+import { api } from '../api/api'
 
 const CreateItem = () => {
-    const handleSubmit = () => {}
+    const {getItems} = useItemStore()
+    const navigate = useNavigate()
+    const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const item = {
+    title: e.target.title.value,
+    description: e.target.description.value,
+    price: parseInt(e.target.price.value),
+    imageUrl: e.target.imageUrl.value
+    }
+    if (e.target.imageUrl.value.trim() !== '') { item.imageUrl = e.target.imageUrl.value; }
+    
+    try{
+
+    await api.sendItem(item)
+    await getItems()
+    navigate('/');
+
+    }catch (error) {
+    console.error(error)
+    }
+    }
     return (
         <div className="container">
             <div class="page-header">

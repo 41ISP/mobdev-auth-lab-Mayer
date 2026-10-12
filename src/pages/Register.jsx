@@ -6,6 +6,7 @@ import { api } from '../api/api'
 import { useUserStore } from '../store/useUserStore'
 
 const Register = () => {
+    
     const [error, setError] = useState("")
     const navigate = useNavigate()
     const { setSession } = useUserStore()

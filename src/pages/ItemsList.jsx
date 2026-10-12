@@ -1,50 +1,40 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ItemCard from '../components/ItemCard'
 import { useItemStore } from '../store/useItemStore'
+import { useUserStore } from '../store/useUserStore'
 
-const ItemsList = () => {
-   // const items = []
+const ItemsList = ({ title = 'Товары', showOwn = false }) => {
 
-  //   const { imdbID } = useParams();
-  // const [movie, setMovie] = useState(null);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState(null);
+    const { items, getItems } = useItemStore()
+    const { session } = useUserStore()
+    const [isloading, setIsLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [timerId, setTimerId] = useState(undefined)
 
-  // useEffect(() => {
-  //   const fetchMovieDetails = async () => {
-  //     setIsLoading(true);
-  //     setError(null);
+    useEffect(() => {
+        const load = async () => {
+            setIsLoading(true)
+            try {
+                await getItems()
+            } catch (error) {
+                console.error(error)
+                setError(error.message || "Что то пошло не так")
+            } finally {
+                setIsLoading(false)
+            }
+        }
+        load()
+        setTimerId(setInterval(() => {
+            try {
+                getItems()
 
-  //     try {
-  //       const apiKey = import.meta.env.VITE_OMDB_API_KEY;
-  //       const response = await fetch(
-  //         `https://www.omdbapi.com/?apikey=${apiKey}&i=${imdbID}&plot=full`
-  //       );
-  //       const data = await response.json();
+            } catch (error) { }
+        }, 10000))
 
-  //       if (data.Response === 'False') {
-  //         setError(data.Error);
-  //       } else {
-  //         setMovie(data);
-  //       }
-  //     } catch (err) {
-  //       setError('Не удалось загрузить данные о фильме');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   if (imdbID) {
-  //     fetchMovieDetails();
-  //   }
-  // }, [imdbID]);
-
-
-     const {items, getItems} = useItemStore()
-    useEffect(() => 
-        {
-            getItems()
-        }, [])
+        return () => {
+            clearInterval(timerId)
+        }
+    }, [])
 
 
     return (
@@ -70,12 +60,17 @@ const ItemsList = () => {
                     <span class="stat-label">Средняя цена</span>
                 </div>
             </div>
-
-            <div class="items-grid">
-                {items.map((item, i) => (
-                    <ItemCard key={i} {...item} />
-                ))}
-            </div>
+            {isloading && <p>Загрузка...</p>}
+            {!isloading && error && <p> {error} </p>}
+            {!isloading && !error && items && (
+                <div class="items-grid">
+                    {showOwn ? item.filter(el => el.userId === session?.user.id).map((item, i) => (
+                        <ItemCard key={i} {...item} />))
+                        : items.map((item, i) => (
+                            <ItemCard key={i} {...item} />
+                        ))}
+                </div>
+            )}
         </div>
     )
 }
